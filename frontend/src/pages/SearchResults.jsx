@@ -25,7 +25,7 @@ const SearchResults = () => {
     {
       id: 3,
       name: "Swiss Alps",
-      image: "https://images.unsplash.com/photo-1542051841857-5f906991e8c1?q=80&w=2070&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=2070&auto=format&fit=crop",
       rating: 5.0,
       price: 1599,
       badge: null

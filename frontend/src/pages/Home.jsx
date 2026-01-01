@@ -90,7 +90,7 @@ const Home = () => {
           {/* Card 3 */}
           <div className="card destination-card">
             <div className="card-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1542051841857-5f906991e8c1?q=80&w=2070&auto=format&fit=crop" alt="Swiss Alps" />
+              <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=2070&auto=format&fit=crop" alt="Swiss Alps" />
             </div>
             <div className="card-content">
               <div className="card-header">
