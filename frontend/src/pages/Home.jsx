@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Search, MapPin, Calendar, Users, ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
+  const [trips, setTrips] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/trips')
+      .then((res) => setTrips(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div className="home-page">
       {/* Hero Section */}
@@ -47,62 +57,40 @@ const Home = () => {
       <section className="section container">
         <div className="section-header">
           <h2 className="section-title">Trending Destinations</h2>
-          <Link to="/search" className="btn btn-outline">View All <ArrowRight size={16} /></Link>
+          <Link to="/search" className="btn btn-outline">
+            View All <ArrowRight size={16} />
+          </Link>
         </div>
 
         <div className="grid destinations-grid">
-          {/* Card 1 */}
-          <div className="card destination-card">
-            <div className="card-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2070&auto=format&fit=crop" alt="Paris" />
-              <div className="card-badge">Popular</div>
-            </div>
-            <div className="card-content">
-              <div className="card-header">
-                <h3>Paris, France</h3>
-                <div className="rating">
-                  <Star size={16} fill="#fbbf24" color="#fbbf24" /> 4.9
-                </div>
+          {trips.map((trip) => (
+            <div className="card destination-card" key={trip._id}>
+              <div className="card-image-wrapper">
+                <img src={trip.image} alt={trip.title} />
+                {trip.tag && <div className="card-badge">{trip.tag}</div>}
               </div>
-              <p className="price">From <span>$1,299</span></p>
-              <Link to="/trip/1" className="btn btn-secondary btn-full">View Details</Link>
-            </div>
-          </div>
 
-          {/* Card 2 */}
-          <div className="card destination-card">
-            <div className="card-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2070&auto=format&fit=crop" alt="Bali" />
-              <div className="card-badge">Best Value</div>
-            </div>
-            <div className="card-content">
-              <div className="card-header">
-                <h3>Bali, Indonesia</h3>
-                <div className="rating">
-                  <Star size={16} fill="#fbbf24" color="#fbbf24" /> 4.8
+              <div className="card-content">
+                <div className="card-header">
+                  <h3>{trip.title}</h3>
+                  <div className="rating">
+                    <Star size={16} fill="#fbbf24" color="#fbbf24" /> {trip.rating}
+                  </div>
                 </div>
-              </div>
-              <p className="price">From <span>$899</span></p>
-              <Link to="/trip/2" className="btn btn-secondary btn-full">View Details</Link>
-            </div>
-          </div>
 
-          {/* Card 3 */}
-          <div className="card destination-card">
-            <div className="card-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=2070&auto=format&fit=crop" alt="Swiss Alps" />
-            </div>
-            <div className="card-content">
-              <div className="card-header">
-                <h3>Swiss Alps</h3>
-                <div className="rating">
-                  <Star size={16} fill="#fbbf24" color="#fbbf24" /> 5.0
-                </div>
+                <p className="price">
+                  From <span>${trip.price}</span>
+                </p>
+
+                <Link
+                  to={`/trip/${trip._id}`}
+                  className="btn btn-secondary btn-full"
+                >
+                  View Details
+                </Link>
               </div>
-              <p className="price">From <span>$1,599</span></p>
-              <Link to="/trip/3" className="btn btn-secondary btn-full">View Details</Link>
             </div>
-          </div>
+          ))}
         </div>
       </section>
 

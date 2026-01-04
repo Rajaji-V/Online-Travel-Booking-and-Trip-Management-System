@@ -83,3 +83,18 @@
         width: 100%;
     }
 }
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+.btn-danger:hover {
+  opacity: .9;
+}
+.booking-action {
+  display: flex;
+  gap: 10px;      /* <-- adds clean space between buttons */
+  align-items: center;
+}
