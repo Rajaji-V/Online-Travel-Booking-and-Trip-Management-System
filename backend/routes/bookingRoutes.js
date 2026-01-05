@@ -1,21 +1,35 @@
 const express = require("express");
 const Booking = require("../models/Booking");
+const { protect, admin } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // CREATE BOOKING
-router.post("/", async (req, res) => {
+router.post("/", protect, async (req, res) => {
   try {
-    const booking = await Booking.create(req.body);
+    const booking = await Booking.create({
+      ...req.body,
+      user: req.user._id,
+    });
     res.status(201).json(booking);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET ALL BOOKINGS (later we’ll filter by user)
-router.get("/", async (req, res) => {
+// GET USER BOOKINGS
+router.get("/mybookings", protect, async (req, res) => {
   try {
-    const bookings = await Booking.find();
+    const bookings = await Booking.find({ user: req.user._id }).populate("tripId");
+    res.json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bookings" });
+  }
+});
+
+// GET ALL BOOKINGS (Admin only)
+router.get("/", protect, admin, async (req, res) => {
+  try {
+    const bookings = await Booking.find().populate("user", "name email").populate("tripId");
     res.json(bookings);
   } catch {
     res.status(500).json({ message: "Error fetching bookings" });
@@ -23,14 +37,24 @@ router.get("/", async (req, res) => {
 });
 
 // DELETE BOOKING
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Check if user owns the booking or is admin
+    if (booking.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     await Booking.findByIdAndDelete(req.params.id);
     res.json({ message: "Booking cancelled" });
   } catch {
     res.status(500).json({ message: "Error cancelling booking" });
   }
 });
-
 
 module.exports = router;

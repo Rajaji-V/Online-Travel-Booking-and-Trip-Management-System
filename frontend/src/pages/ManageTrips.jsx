@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
+import { PlusCircle, Image as ImageIcon, MapPin, DollarSign, Star, FileText } from 'lucide-react';
+import './ManageTrips.css';
 
 const ManageTrips = () => {
   const [trip, setTrip] = useState({
@@ -10,6 +12,7 @@ const ManageTrips = () => {
     rating: "",
     description: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setTrip({ ...trip, [e.target.name]: e.target.value });
@@ -17,10 +20,10 @@ const ManageTrips = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/trips", trip);
+      await API.post("/trips", trip);
       alert("Trip added successfully!");
-
       setTrip({
         title: "",
         location: "",
@@ -32,99 +35,113 @@ const ManageTrips = () => {
     } catch (err) {
       console.error(err.response?.data || err);
       alert("Error adding trip");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2 style={{ marginBottom: "20px" }}>Manage Trips</h2>
+    <div className="container section manage-trips">
+      <div className="section-header">
+        <h2 className="section-title">Manage Trips</h2>
+        <p className="section-subtitle">Add new adventure destinations for your travelers</p>
+      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "420px",
-          padding: "20px",
-          borderRadius: "16px",
-          background: "#f8fafc",
-          boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-        }}
-      >
-        <input
-          type="text"
-          name="title"
-          placeholder="Trip Title"
-          value={trip.title}
-          onChange={handleChange}
-          required
-          style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
-        />
+      <div className="admin-form-container glass-panel fade-in">
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="form-grid">
+            <div className="form-group full-width">
+              <label><PlusCircle size={16} /> Trip Title</label>
+              <input
+                type="text"
+                name="title"
+                placeholder="Ex: Romantic Paris Getaway"
+                value={trip.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="text"
-          name="location"
-          placeholder="Location (ex: Paris, France)"
-          value={trip.location}
-          onChange={handleChange}
-          required
-          style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
-        />
+            <div className="form-group">
+              <label><MapPin size={16} /> Location</label>
+              <input
+                type="text"
+                name="location"
+                placeholder="Ex: Paris, France"
+                value={trip.location}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={trip.price}
-          onChange={handleChange}
-          required
-          style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
-        />
+            <div className="form-group">
+              <label><DollarSign size={16} /> Price ($)</label>
+              <input
+                type="number"
+                name="price"
+                placeholder="Ex: 1200"
+                value={trip.price}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="text"
-          name="image"
-          placeholder="Image URL"
-          value={trip.image}
-          onChange={handleChange}
-          required
-          style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
-        />
+            <div className="form-group">
+              <label><ImageIcon size={16} /> Image URL</label>
+              <input
+                type="text"
+                name="image"
+                placeholder="URL to destination image"
+                value={trip.image}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="number"
-          step="0.1"
-          name="rating"
-          placeholder="Rating (optional)"
-          value={trip.rating}
-          onChange={handleChange}
-          style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
-        />
+            <div className="form-group">
+              <label><Star size={16} /> Rating (1.0 - 5.0)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="1"
+                max="5"
+                name="rating"
+                placeholder="Ex: 4.8"
+                value={trip.rating}
+                onChange={handleChange}
+              />
+            </div>
 
-        <textarea
-          name="description"
-          placeholder="Short description"
-          value={trip.description}
-          onChange={handleChange}
-          style={{ width: "100%", padding: "10px", marginBottom: "18px" }}
-        />
+            <div className="form-group full-width">
+              <label><FileText size={16} /> Description</label>
+              <textarea
+                name="description"
+                placeholder="Describe the amazing journey..."
+                value={trip.description}
+                onChange={handleChange}
+                rows="4"
+              />
+            </div>
+          </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            fontWeight: "600",
-            letterSpacing: "0.3px",
-          }}
-        >
-          Add Trip
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="btn btn-primary btn-full admin-submit-btn"
+            disabled={loading}
+          >
+            {loading ? "Adding Trip..." : "Add New Trip"}
+          </button>
+        </form>
+      </div>
+
+      {trip.image && (
+        <div className="preview-section container">
+          <h3>Image Preview</h3>
+          <div className="preview-card glass-panel">
+            <img src={trip.image} alt="Preview" onError={(e) => e.target.src = 'https://via.placeholder.com/800x400?text=Invalid+Image+URL'} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

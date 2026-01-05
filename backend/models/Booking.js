@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema(
   {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     tripId: { type: mongoose.Schema.Types.ObjectId, ref: "Trip", required: true },
     tripName: String,
-    userName: String,        // later we will connect auth
     date: String,
     guests: Number,
     status: { type: String, default: "Upcoming" },
