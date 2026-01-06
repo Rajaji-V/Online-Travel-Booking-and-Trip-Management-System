@@ -2,7 +2,7 @@
 
 NovaTravel is a modern, premium travel booking application designed to provide users with a seamless experience for discovering, browsing, and booking travel destinations. It features a stunning glassmorphism UI, a robust backend for managing trips and bookings, and a responsive design that works beautifully across all devices.
 
-## 🚀 Features
+##  Features
 
 ### Frontend (User & Admin)
 *   **Immersive User Interface**: Built with a "Deep Night" dark theme, featuring glassmorphism effects, smooth animations, and responsive layouts.
@@ -20,7 +20,7 @@ NovaTravel is a modern, premium travel booking application designed to provide u
 *   **Authentication**: JWT-based authentication for secure user sessions.
 *   **Data Validation**: Robust validation for booking inputs and user data.
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 ### Frontend
 *   **Framework**: React (Vite)
@@ -36,7 +36,7 @@ NovaTravel is a modern, premium travel booking application designed to provide u
 *   **Authentication**: JSON Web Tokens (JWT) & Bcrypt
 *   **Environment**: Dotenv
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 Follow these steps to set up the project locally.
 
@@ -86,7 +86,7 @@ npm run dev
 ```
 The application will run on `http://localhost:5173` (or the port specified by Vite).
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 onlineTravelBooking/
@@ -107,10 +107,10 @@ onlineTravelBooking/
 └── README.md               # Project documentation
 ```
 
-## 🛡️ License
+##  License
 
 This project is licensed under the MIT License. Feel free to use and modify it for your portfolio or learning purposes.
 
 ---
 
-**Developed by Akash**
+**Developed by Rajaji, Rithicka, Dharsin, Muthu Madhesh, Ponmani, Dhusinthan**
