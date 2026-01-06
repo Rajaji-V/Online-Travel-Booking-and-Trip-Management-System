@@ -3,7 +3,7 @@ import API from '../api/axios';
 import { Star, Filter, Search as SearchIcon, MapPin, Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Home.css';
+import './SearchResults.css';
 
 const SearchResults = () => {
   const [results, setResults] = useState([]);

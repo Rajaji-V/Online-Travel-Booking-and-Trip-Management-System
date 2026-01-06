@@ -100,8 +100,8 @@ const TripDetails = () => {
           </div>
         </div>
 
-        <div className="details-grid">
-          <div className="details-main">
+        <div className="details-grid-single">
+          <div className="details-main-content">
             <div className="image-gallery glass-panel">
               <img src={trip.image} alt={trip.title} className="main-image" />
             </div>
@@ -172,70 +172,62 @@ const TripDetails = () => {
               )}
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="details-sidebar">
-            <div className="booking-card glass-panel sticky">
-              {bookingSuccess ? (
-                <div className="success-state fade-in">
-                  <CheckCircle size={60} color="#10b981" />
-                  <h3>Booking Success!</h3>
-                  <p>Your journey to {trip.title} is now confirmed.</p>
-                  <button className="btn btn-outline btn-full" onClick={() => setBookingSuccess(false)}>Book Again</button>
-                  <Link to="/my-bookings" className="btn btn-primary btn-full" style={{ marginTop: '1rem' }}>View My Bookings</Link>
-                </div>
-              ) : (
-                <>
-                  <div className="booking-price">
-                    <span className="amount">${trip.price}</span>
-                  </div>
-
-                  <form className="booking-form" onSubmit={handleBooking}>
-                    <div className="form-group">
-                      <label htmlFor="booking-date">
-                        <Calendar size={16} />
-                        Date
-                      </label>
-                      <input
-                        id="booking-date"
-                        type="date"
-                        value={bookingDate}
-                        onChange={(e) => setBookingDate(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="booking-guests">
-                        <Users size={16} />
-                        Guests
-                      </label>
-                      <div className="guest-selector">
-                        <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))}>−</button>
-                        <span>{guests}</span>
-                        <button type="button" onClick={() => setGuests(guests + 1)}>+</button>
-                      </div>
-                    </div>
-
-                    <div className="price-summary">
-                      <div className="summary-row">
-                        <span>Base Price</span>
-                        <span>${trip.price} × {guests}</span>
-                      </div>
-                      <div className="summary-row total">
-                        <span>Total</span>
-                        <span>${trip.price * guests}</span>
-                      </div>
-                    </div>
-
-                    <button type="submit" className="btn btn-primary btn-full" disabled={bookingLoading}>
-                      {bookingLoading ? "Processing..." : "Reserve Now"}
-                    </button>
-                  </form>
-                  <p className="no-charge-text">You won't be charged yet</p>
-                </>
-              )}
+      {/* Sticky Bottom Booking Bar */}
+      <div className="booking-bottom-bar glass-panel">
+        <div className="container booking-bar-content">
+          {bookingSuccess ? (
+            <div className="bar-success-state fade-in">
+              <CheckCircle size={24} color="#10b981" />
+              <span><strong>Booking Confirmed!</strong> We've sent the details to your email.</span>
+              <div className="success-actions">
+                <button className="btn btn-outline btn-sm" onClick={() => setBookingSuccess(false)}>Book Another</button>
+                <Link to="/my-bookings" className="btn btn-primary btn-sm">My Trips</Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            <form className="bar-form" onSubmit={handleBooking}>
+              <div className="bar-price-section">
+                <span className="bar-price-label">Price per person</span>
+                <span className="bar-price-amount">${trip.price}</span>
+              </div>
+
+              <div className="bar-divider"></div>
+
+              <div className="bar-inputs">
+                <div className="bar-input-group">
+                  <label><Calendar size={14} /> Date</label>
+                  <input
+                    type="date"
+                    value={bookingDate}
+                    onChange={(e) => setBookingDate(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="bar-input-group">
+                  <label><Users size={14} /> Guests</label>
+                  <div className="guests-mini-control">
+                    <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))}>−</button>
+                    <span>{guests}</span>
+                    <button type="button" onClick={() => setGuests(guests + 1)}>+</button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bar-action">
+                <div className="bar-total">
+                  <span>Total:</span>
+                  <strong>${trip.price * guests}</strong>
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={bookingLoading}>
+                  {bookingLoading ? "Processing..." : "Reserve Now"}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
