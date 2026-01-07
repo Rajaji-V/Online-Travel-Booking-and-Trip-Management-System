@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const Trip = require('./models/Trip');
+const User = require('./models/User');
 
 const sampleTrips = [
     {
@@ -72,6 +73,23 @@ async function seed() {
         await Trip.deleteMany({});
         await Trip.insertMany(sampleTrips);
         console.log("Database seeded with premium destinations! 🌟");
+
+        // Create Default Admin
+        const adminEmail = "admin@novatravel.com";
+        const adminExists = await User.findOne({ email: adminEmail });
+
+        if (!adminExists) {
+            await User.create({
+                name: "Admin User",
+                email: adminEmail,
+                password: "admin123",
+                role: "admin"
+            });
+            console.log("Default Admin created: admin@novatravel.com | admin123 🔑");
+        } else {
+            console.log("Admin already exists. 🛡️");
+        }
+
         process.exit(0);
     } catch (err) {
         console.error("Seed Error:", err);
