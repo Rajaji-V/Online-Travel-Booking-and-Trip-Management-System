@@ -13,6 +13,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ManageUsers from './pages/ManageUsers';
 import ManageTrips from './pages/ManageTrips';
 import ViewBookings from './pages/ViewBookings';
+import ItineraryPage from './pages/ItineraryPage';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -54,6 +55,11 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/itinerary" element={
+              <ProtectedRoute>
+                <ItineraryPage />
               </ProtectedRoute>
             } />
 

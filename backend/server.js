@@ -10,6 +10,7 @@ if (!process.env.JWT_SECRET) {
 const tripRoutes = require("./routes/tripRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoutes = require("./routes/userRoutes");
+const itineraryRoutes = require("./routes/itineraryRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use("/api/trips", tripRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/itineraries", itineraryRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
