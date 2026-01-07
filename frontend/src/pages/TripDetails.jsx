@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Shield, ArrowLeft, Send, CheckCircle } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Shield, ArrowLeft, Send, CheckCircle, Download, Clock } from 'lucide-react';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import './TripDetails.css';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const TripDetails = () => {
   const { id } = useParams();
@@ -37,6 +39,36 @@ const TripDetails = () => {
     };
     fetchTrip();
   }, [id]);
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    // Add Trip Information
+    doc.setFontSize(22);
+    doc.text(trip.title, 14, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Location: ${trip.location}`, 14, 30);
+    doc.text(`Price: $${trip.price}`, 14, 37);
+
+    doc.setFontSize(16);
+    doc.text("Itinerary", 14, 50);
+
+    // Itinerary Table
+    const tableData = trip.itinerary.map(item => [
+      `Day ${item.day}`,
+      item.activity,
+      item.description || ''
+    ]);
+
+    autoTable(doc, {
+      startY: 55,
+      head: [['Day', 'Activity', 'Description']],
+      body: tableData,
+    });
+
+    doc.save(`${trip.title.replace(/\s+/g, '_')}_Itinerary.pdf`);
+  };
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -107,7 +139,14 @@ const TripDetails = () => {
             </div>
 
             <div className="description-section section-card glass-panel">
-              <h3>About this destination</h3>
+              <div className="section-header-flex">
+                <h3>About this destination</h3>
+                {trip.itinerary && trip.itinerary.length > 0 && (
+                  <button className="btn btn-outline btn-sm download-btn" onClick={downloadPDF}>
+                    <Download size={16} /> Download Itinerary
+                  </button>
+                )}
+              </div>
               <p>{trip.description}</p>
 
               <div className="amenities">
@@ -115,6 +154,26 @@ const TripDetails = () => {
                 <div className="amenity"><Users size={20} /> Professional Guides</div>
                 <div className="amenity"><Calendar size={20} /> Custom Schedules</div>
               </div>
+            </div>
+
+            {/* NEW Itinerary Section */}
+            <div className="itinerary-section section-card glass-panel">
+              <h3>Trip Itinerary</h3>
+              {trip.itinerary && trip.itinerary.length > 0 ? (
+                <div className="itinerary-timeline">
+                  {trip.itinerary.map((item, idx) => (
+                    <div key={idx} className="itinerary-item">
+                      <div className="day-badge">Day {item.day}</div>
+                      <div className="itinerary-content">
+                        <h4>{item.activity}</h4>
+                        <p>{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>Detailed itinerary coming soon!</p>
+              )}
             </div>
 
             {/* Reviews Section */}

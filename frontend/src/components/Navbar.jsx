@@ -40,7 +40,6 @@ const Navbar = () => {
           {user && (
             <>
               <Link to="/my-bookings" className={location.pathname === '/my-bookings' ? 'active' : ''}>My Trips</Link>
-              <Link to="/itinerary" className={location.pathname === '/itinerary' ? 'active' : ''}>Itinerary</Link>
               {user.role === 'admin' && (
                 <Link to="/admin" className="admin-link">
                   <LayoutDashboard size={18} /> Dashboard
@@ -82,7 +81,6 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/my-bookings">My Trips</Link>
-              <Link to="/itinerary">Itinerary</Link>
               <Link to="/profile">Profile</Link>
               {user.role === 'admin' && <Link to="/admin">Admin Dashboard</Link>}
               <button onClick={logout} className="btn btn-secondary btn-full">Logout</button>

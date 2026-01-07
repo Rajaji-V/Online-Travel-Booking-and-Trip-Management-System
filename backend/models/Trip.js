@@ -48,6 +48,13 @@ const tripSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    itinerary: [
+      {
+        day: { type: Number, required: true },
+        activity: { type: String, required: true },
+        description: { type: String },
+      }
+    ],
     reviews: [reviewSchema],
   },
   { timestamps: true }
