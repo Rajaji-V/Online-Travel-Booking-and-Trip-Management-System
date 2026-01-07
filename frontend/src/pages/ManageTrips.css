@@ -62,3 +62,74 @@
         grid-column: span 1;
     }
 }
+
+/* Itinerary Admin Section */
+.itinerary-admin-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.itinerary-admin-section h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.itinerary-admin-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.itinerary-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.itinerary-card-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-remove-itinerary {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-remove-itinerary:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-add-itinerary {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn-add-itinerary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--primary);
+}

@@ -40,8 +40,8 @@ router.get("/:id", async (req, res) => {
 // 3. ADD TRIP (Admin only)
 router.post("/", protect, admin, async (req, res) => {
   try {
-    const { title, location, price, image, category, description } = req.body;
-    const newTrip = new Trip({ title, location, price, image, category, description });
+    const { title, location, price, image, category, description, itinerary } = req.body;
+    const newTrip = new Trip({ title, location, price, image, category, description, itinerary });
     await newTrip.save();
     res.status(201).json({ message: "Trip added successfully", trip: newTrip });
   } catch (error) {
@@ -60,6 +60,7 @@ router.put("/:id", protect, admin, async (req, res) => {
       trip.image = req.body.image || trip.image;
       trip.category = req.body.category || trip.category;
       trip.description = req.body.description || trip.description;
+      trip.itinerary = req.body.itinerary || trip.itinerary;
 
       const updatedTrip = await trip.save();
       res.json(updatedTrip);
