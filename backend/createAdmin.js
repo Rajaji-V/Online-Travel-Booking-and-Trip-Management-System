@@ -13,8 +13,11 @@ const createAdmin = async () => {
         const adminExists = await User.findOne({ email: adminEmail });
 
         if (adminExists) {
-            console.log("Admin user already exists with email:", adminEmail);
-            console.log("Details: Username (Email): admin@novatravel.com | Password: admin123");
+            adminExists.password = adminPassword;
+            adminExists.role = "admin";
+            await adminExists.save();
+            console.log("✅ Admin password refreshed!");
+            console.log("Details: Email: admin@novatravel.com | Password: admin123");
             process.exit(0);
         }
 

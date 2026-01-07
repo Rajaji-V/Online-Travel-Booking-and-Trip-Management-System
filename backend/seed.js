@@ -76,9 +76,9 @@ async function seed() {
 
         // Create Default Admin
         const adminEmail = "admin@novatravel.com";
-        const adminExists = await User.findOne({ email: adminEmail });
+        const adminUser = await User.findOne({ email: adminEmail });
 
-        if (!adminExists) {
+        if (!adminUser) {
             await User.create({
                 name: "Admin User",
                 email: adminEmail,
@@ -87,7 +87,11 @@ async function seed() {
             });
             console.log("Default Admin created: admin@novatravel.com | admin123 🔑");
         } else {
-            console.log("Admin already exists. 🛡️");
+            // Update password to ensure user can login
+            adminUser.password = "admin123";
+            adminUser.role = "admin"; // Ensure they are admin
+            await adminUser.save();
+            console.log("Admin credentials refreshed: admin@novatravel.com | admin123 🛡️");
         }
 
         process.exit(0);
