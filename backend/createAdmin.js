@@ -8,7 +8,7 @@ const createAdmin = async () => {
         console.log("Connected to MongoDB for admin creation...");
 
         const adminEmail = "admin@novatravel.com";
-        const adminPassword = "admin123"; // Using the user's requested "admin" logic
+        const adminPassword = "admin123";
 
         const adminExists = await User.findOne({ email: adminEmail });
 

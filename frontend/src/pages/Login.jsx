@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,8 +15,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate('/');
+      const user = await login(email, password);
+      if (isAdminLogin && user.role !== 'admin') {
+        setError('You do not have admin privileges');
+        return;
+      }
+      navigate(user.role === 'admin' ? '/admin' : '/');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to login');
     }
@@ -24,8 +29,25 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-card glass-panel fade-in">
-        <h2 className="auth-title">Welcome Back</h2>
-        <p className="auth-subtitle">Sign in to access your bookings</p>
+        <div className="auth-tabs">
+          <button
+            className={`auth-tab ${!isAdminLogin ? 'active' : ''}`}
+            onClick={() => setIsAdminLogin(false)}
+          >
+            User Login
+          </button>
+          <button
+            className={`auth-tab ${isAdminLogin ? 'active' : ''}`}
+            onClick={() => setIsAdminLogin(true)}
+          >
+            Admin Login
+          </button>
+        </div>
+
+        <h2 className="auth-title">{isAdminLogin ? 'Admin Portal' : 'Welcome Back'}</h2>
+        <p className="auth-subtitle">
+          {isAdminLogin ? 'Login to manage the platform' : 'Sign in to access your bookings'}
+        </p>
 
         {error && <p className="error-message">{error}</p>}
 
@@ -36,7 +58,7 @@ const Login = () => {
               <Mail className="input-icon" size={18} />
               <input
                 type="email"
-                placeholder="you@example.com"
+                placeholder={isAdminLogin ? "admin@travel.com" : "you@example.com"}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -58,12 +80,16 @@ const Login = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-full">Sign In</button>
+          <button type="submit" className={`btn btn-full ${isAdminLogin ? 'btn-secondary' : 'btn-primary'}`}>
+            {isAdminLogin ? 'Access Admin Panel' : 'Sign In'}
+          </button>
         </form>
 
-        <p className="auth-footer">
-          Don't have an account? <Link to="/register">Sign up</Link>
-        </p>
+        {!isAdminLogin && (
+          <p className="auth-footer">
+            Don't have an account? <Link to="/register">Sign up</Link>
+          </p>
+        )}
       </div>
     </div>
   );

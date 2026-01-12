@@ -287,7 +287,11 @@
     }
 }
 
-/* Itinerary Section Styling */
+/* Itinerary Styles */
+.itinerary-section {
+    margin-top: 2rem;
+}
+
 .section-header-flex {
     display: flex;
     justify-content: space-between;
@@ -295,74 +299,55 @@
     margin-bottom: 1.5rem;
 }
 
-.section-header-flex h3 {
-    margin: 0;
+.section-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
 }
 
-.itinerary-timeline {
-    position: relative;
-    padding-left: 2rem;
-    margin-top: 2rem;
-}
-
-.itinerary-timeline::before {
-    content: '';
-    position: absolute;
-    left: 0.75rem;
-    top: 1rem;
-    bottom: 1rem;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.1);
+.itinerary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .itinerary-item {
-    position: relative;
-    margin-bottom: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .itinerary-item:last-child {
-    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
-.day-badge {
-    position: absolute;
-    left: -2.75rem;
-    top: 0;
-    background: var(--primary);
+.itinerary-day {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     color: white;
-    font-size: 0.75rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 800;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    z-index: 2;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
-}
-
-.itinerary-item::after {
-    content: '';
-    position: absolute;
-    left: -1.5rem;
-    /* center on line */
-    top: 0.5rem;
-    width: 12px;
-    height: 12px;
-    background: var(--bg-primary);
-    border: 2px solid var(--primary);
-    border-radius: 50%;
-    z-index: 1;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .itinerary-content h4 {
-    margin: 0 0 0.5rem 0;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
     font-size: 1.1rem;
 }
 
 .itinerary-content p {
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin: 0;
     line-height: 1.6;
+    font-size: 0.95rem;
 }
 
 .download-btn {
@@ -371,14 +356,61 @@
     gap: 0.5rem;
 }
 
+/* Admin Edit Itinerary */
+.admin-itinerary-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.itinerary-edit-item {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remove-day-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.remove-day-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.edit-input,
+.edit-textarea {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.edit-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
 @media (max-width: 600px) {
     .section-header-flex {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-    }
-
-    .itinerary-timeline {
-        padding-left: 3rem;
     }
 }

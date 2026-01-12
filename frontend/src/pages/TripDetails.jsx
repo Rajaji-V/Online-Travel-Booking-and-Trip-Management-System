@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Star, Calendar, Users, Shield, ArrowLeft, Send, CheckCircle, Download, Clock } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Shield, ArrowLeft, Send, CheckCircle, Download } from 'lucide-react';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import './TripDetails.css';
@@ -26,11 +26,17 @@ const TripDetails = () => {
   const [comment, setComment] = useState('');
   const [reviewLoading, setReviewLoading] = useState(false);
 
+  // Itinerary Edit (Admin)
+  const [isEditingItinerary, setIsEditingItinerary] = useState(false);
+  const [editedItinerary, setEditedItinerary] = useState([]);
+  const [updateLoading, setUpdateLoading] = useState(false);
+
   useEffect(() => {
     const fetchTrip = async () => {
       try {
         const { data } = await API.get(`/trips/${id}`);
         setTrip(data);
+        setEditedItinerary(data.itinerary || []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -68,6 +74,36 @@ const TripDetails = () => {
     });
 
     doc.save(`${trip.title.replace(/\s+/g, '_')}_Itinerary.pdf`);
+  };
+
+  const handleUpdateItinerary = async () => {
+    setUpdateLoading(true);
+    try {
+      const { data } = await API.put(`/trips/${id}`, { itinerary: editedItinerary });
+      setTrip(data);
+      setIsEditingItinerary(false);
+      alert("Itinerary updated successfully!");
+    } catch (err) {
+      alert("Failed to update itinerary");
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
+  const addItineraryDay = () => {
+    const nextDay = editedItinerary.length + 1;
+    setEditedItinerary([...editedItinerary, { day: nextDay, activity: "", description: "" }]);
+  };
+
+  const updateItineraryItem = (index, field, value) => {
+    const updated = [...editedItinerary];
+    updated[index][field] = value;
+    setEditedItinerary(updated);
+  };
+
+  const removeItineraryDay = (index) => {
+    const updated = editedItinerary.filter((_, i) => i !== index).map((item, i) => ({ ...item, day: i + 1 }));
+    setEditedItinerary(updated);
   };
 
   const handleBooking = async (e) => {
@@ -141,11 +177,16 @@ const TripDetails = () => {
             <div className="description-section section-card glass-panel">
               <div className="section-header-flex">
                 <h3>About this destination</h3>
-                {trip.itinerary && trip.itinerary.length > 0 && (
-                  <button className="btn btn-outline btn-sm download-btn" onClick={downloadPDF}>
-                    <Download size={16} /> Download Itinerary
-                  </button>
-                )}
+                <div className="section-actions">
+                  {trip.itinerary && trip.itinerary.length > 0 && (
+                    <button className="btn btn-outline btn-sm download-btn" onClick={downloadPDF}>
+                      <Download size={16} /> Download PDF
+                    </button>
+                  )}
+                  {user?.role === 'admin' && !isEditingItinerary && (
+                    <button className="btn btn-outline btn-sm" onClick={() => setIsEditingItinerary(true)}>Edit Itinerary</button>
+                  )}
+                </div>
               </div>
               <p>{trip.description}</p>
 
@@ -156,24 +197,57 @@ const TripDetails = () => {
               </div>
             </div>
 
-            {/* NEW Itinerary Section */}
             <div className="itinerary-section section-card glass-panel">
-              <h3>Trip Itinerary</h3>
-              {trip.itinerary && trip.itinerary.length > 0 ? (
-                <div className="itinerary-timeline">
-                  {trip.itinerary.map((item, idx) => (
-                    <div key={idx} className="itinerary-item">
-                      <div className="day-badge">Day {item.day}</div>
-                      <div className="itinerary-content">
-                        <h4>{item.activity}</h4>
-                        <p>{item.description}</p>
+              <div className="section-header-flex">
+                <h3>Trip Itinerary</h3>
+                {isEditingItinerary && (
+                  <div className="admin-itinerary-controls">
+                    <button className="btn btn-outline btn-sm" onClick={addItineraryDay}>Add Day</button>
+                    <button className="btn btn-primary btn-sm" onClick={handleUpdateItinerary} disabled={updateLoading}>
+                      {updateLoading ? "Saving..." : "Save Changes"}
+                    </button>
+                    <button className="btn btn-outline btn-sm" onClick={() => { setIsEditingItinerary(false); setEditedItinerary(trip.itinerary || []); }}>Cancel</button>
+                  </div>
+                )}
+              </div>
+
+              <div className="itinerary-list">
+                {isEditingItinerary ? (
+                  editedItinerary.map((item, index) => (
+                    <div key={index} className="itinerary-edit-item glass-panel">
+                      <div className="edit-item-header">
+                        <strong>Day {item.day}</strong>
+                        <button className="remove-day-btn" onClick={() => removeItineraryDay(index)}>Remove</button>
                       </div>
+                      <input
+                        type="text"
+                        placeholder="Activity"
+                        value={item.activity}
+                        onChange={(e) => updateItineraryItem(index, 'activity', e.target.value)}
+                        className="edit-input"
+                      />
+                      <textarea
+                        placeholder="Description"
+                        value={item.description}
+                        onChange={(e) => updateItineraryItem(index, 'description', e.target.value)}
+                        className="edit-textarea"
+                      />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p>Detailed itinerary coming soon!</p>
-              )}
+                  ))
+                ) : (
+                  trip.itinerary && trip.itinerary.length > 0 ? (
+                    trip.itinerary.map((item, index) => (
+                      <div key={index} className="itinerary-item">
+                        <div className="itinerary-day">Day {item.day}</div>
+                        <div className="itinerary-content">
+                          <h4>{item.activity}</h4>
+                          <p>{item.description}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : <p>No itinerary details available for this trip yet.</p>
+                )}
+              </div>
             </div>
 
             {/* Reviews Section */}
