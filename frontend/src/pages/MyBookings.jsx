@@ -103,31 +103,32 @@ const MyBookings = () => {
             {bookings.map((booking) => (
               <div key={booking._id} className="booking-card glass-panel fade-in">
                 <div className="booking-image">
-                  <img src={booking.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828'} alt={booking.destination} />
-                  <div className={`status-badge ${booking.status}`}>{booking.status}</div>
+                  <img src={booking.image || booking.tripId?.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828'} alt={booking.destination || booking.tripId?.title} />
+                  <div className={`status-badge ${booking.status?.toLowerCase()}`}>{booking.status}</div>
                 </div>
 
                 <div className="booking-details">
-                  <h3>{booking.destination}</h3>
+                  <h3>{booking.destination || booking.tripId?.title || 'Trip Details'}</h3>
+                  {booking.tripId?.location && <p className="booking-location"><MapPin size={14} /> {booking.tripId.location}</p>}
 
                   <div className="booking-meta">
                     <div className="meta-item">
                       <Calendar size={16} />
-                      <span>{new Date(booking.date).toLocaleDateString('en-US', {
+                      <span>{booking.date ? new Date(booking.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
-                      })}</span>
+                      }) : 'Date not set'}</span>
                     </div>
 
                     <div className="meta-item">
                       <Users size={16} />
-                      <span>{booking.guests} {booking.guests === 1 ? 'Guest' : 'Guests'}</span>
+                      <span>{booking.guests || 0} {booking.guests === 1 ? 'Guest' : 'Guests'}</span>
                     </div>
 
                     <div className="meta-item price-meta">
                       <DollarSign size={16} />
-                      <span>${booking.totalPrice || 'N/A'}</span>
+                      <span>${booking.totalPrice || (booking.tripId?.price * booking.guests) || 'N/A'}</span>
                     </div>
                   </div>
                 </div>

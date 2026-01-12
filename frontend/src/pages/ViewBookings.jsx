@@ -51,8 +51,8 @@ const ViewBookings = () => {
                 <tr key={booking._id}>
                   <td>
                     <div className="table-cell-trip">
-                      <strong>{booking.tripName}</strong>
-                      <span className="text-muted">{booking.tripId?._id}</span>
+                      <strong>{booking.tripName || booking.tripId?.title || 'Unknown Trip'}</strong>
+                      <span className="text-muted">{booking.tripId?._id || 'N/A'}</span>
                     </div>
                   </td>
                   <td>

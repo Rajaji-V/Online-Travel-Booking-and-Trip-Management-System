@@ -3,12 +3,26 @@ const Booking = require("../models/Booking");
 const { protect, admin } = require("../middleware/authMiddleware");
 const router = express.Router();
 
+const Trip = require("../models/Trip");
+
 // CREATE BOOKING
 router.post("/", protect, async (req, res) => {
+  const { tripId, date, guests, totalPrice } = req.body;
   try {
+    const trip = await Trip.findById(tripId);
+    if (!trip) {
+      return res.status(404).json({ message: "Trip not found" });
+    }
+
     const booking = await Booking.create({
-      ...req.body,
       user: req.user._id,
+      tripId,
+      tripName: trip.title,
+      destination: trip.title,
+      date,
+      guests,
+      totalPrice: totalPrice || trip.price * guests,
+      image: trip.image,
     });
     res.status(201).json(booking);
   } catch (err) {

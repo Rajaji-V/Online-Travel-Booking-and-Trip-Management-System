@@ -4,9 +4,11 @@ const bookingSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     tripId: { type: mongoose.Schema.Types.ObjectId, ref: "Trip", required: true },
-    tripName: String,
+    tripName: String, // Kept for legacy if needed
+    destination: String, // Adding for frontend compatibility
     date: String,
     guests: Number,
+    totalPrice: Number,
     status: { type: String, default: "Upcoming" },
     image: String,
   },
